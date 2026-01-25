@@ -424,7 +424,7 @@ onMounted(() => {
                 <input type="checkbox" v-model="filterVolOnly" class="w-5 h-5 accent-purple-500" />
                 <span class="text-sm font-bold">Alleen volle wezenknal</span>
                 <div class="border border-white/20 p-2 rounded-full">
-                  <img src="../img/wezenknal/vol.png" class="w-6" />
+                  <img src="../img/icons/vol.png" class="w-6" />
                 </div>
               </label>
 
@@ -438,7 +438,7 @@ onMounted(() => {
                 />
                 <span class="text-sm font-bold">Tovertas in derde reeks</span>
                 <div class="border border-white/20 p-2 rounded-full">
-                  <img src="../img/powerups/icon_powerup_bag.png" class="w-6" />
+                  <img src="../img/icons/icon_powerup_bag.png" class="w-6" />
                 </div>
               </label>
             </div>
