@@ -35,6 +35,7 @@ verwerk_plaatjes.py
 *.txt
 src/components/icons/
 src/fonts
+path/
 
 *.tsbuildinfo
 
