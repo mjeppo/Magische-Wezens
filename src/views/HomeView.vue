@@ -318,7 +318,7 @@ onMounted(() => {
   >
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
-      <div class="mb-3 pt-1 flex flex-col items-center ">
+      <div class="mb-3 pt-1 flex flex-col items-center">
         <h1
           class="text-4xl font-black text-white mb-1 tracking-tight bg-slate-800/50 backdrop-blur-sm p-6 border border-slate-700 shadow-2xl transition-all py-1 rounded-3xl w-full text-center"
         >
@@ -383,13 +383,15 @@ onMounted(() => {
               - Filters -
             </p>
 
-            <div class="mb-6 flex flex-col sm:flex-row justify-center gap-4">
-              <div class="flex flex-col gap-1 mt-[-18px] h-8">
-                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1 "
-                  >Sorteer op</label
-                >
+            <div
+              class="mb-6 flex flex-col lg:flex-row items-center lg:items-end justify-center gap-6"
+            >
+              <div class="flex flex-col gap-2 w-full sm:w-auto items-center sm:items-start">
+                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">
+                  Sorteer op
+                </label>
                 <div
-                  class="inline-flex p-2 bg-slate-900/50 backdrop-blur-md rounded-xl border border-slate-700 w-fit"
+                  class="inline-flex p-1.5 bg-slate-900/50 backdrop-blur-md rounded-xl border border-slate-700 w-full sm:w-fit"
                 >
                   <button
                     @click="sortBy = 'points'"
@@ -398,9 +400,13 @@ onMounted(() => {
                         ? 'bg-purple-600 text-white shadow-lg'
                         : 'text-slate-400 hover:text-slate-200'
                     "
-                    class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 flex items-center gap-2"
+                    class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 flex items-center justify-center gap-2"
                   >
-                    <span class="text-sm"><img src="../img/icons/icon_creature_meter.png" class="w-6 h-6"></span> Punten voor wezenknal
+                    <img
+                      src="../img/icons/icon_creature_meter.png"
+                      class="w-5 h-5 object-contain"
+                    />
+                    <span class="whitespace-nowrap">Punten</span>
                   </button>
 
                   <button
@@ -410,37 +416,47 @@ onMounted(() => {
                         ? 'bg-purple-600 text-white shadow-lg'
                         : 'text-slate-400 hover:text-slate-200'
                     "
-                    class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 flex items-center gap-2"
+                    class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 flex items-center justify-center gap-2"
                   >
-                    <span class="text-sm"></span>Naam
-                    <div class=""><img src="../img/icons/abc-block.png" class="w-6 h-6"></div>
+                    <span class="whitespace-nowrap">Naam</span>
+                    <img src="../img/icons/abc-block.png" class="w-5 h-5 object-contain" />
                   </button>
-                  
                 </div>
               </div>
-              <label
-                class="flex items-center gap-3 cursor-pointer group bg-slate-900/50 px-3 py-1 rounded-2xl border border-slate-700 hover:border-blue-500/50 transition-colors text-white"
-              >
-                <input type="checkbox" v-model="filterVolOnly" class="w-5 h-5 accent-purple-500" />
-                <span class="text-sm font-bold">Alleen volle wezenknal</span>
-                <div class="border border-white/20 p-2 rounded-full">
-                  <img src="../img/icons/vol.png" class="w-6" />
-                </div>
-              </label>
 
-              <label
-                class="flex items-center gap-3 cursor-pointer group bg-slate-900/50 px-6 py-3 rounded-2xl border border-slate-700 hover:border-blue-500/50 transition-colors text-white"
-              >
-                <input
-                  type="checkbox"
-                  v-model="filterTovertasOnly"
-                  class="w-5 h-5 accent-purple-500"
-                />
-                <span class="text-sm font-bold">Tovertas in derde reeks</span>
-                <div class="border border-white/20 p-2 rounded-full">
-                  <img src="../img/icons/icon_powerup_bag.png" class="w-6" />
-                </div>
-              </label>
+              <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <label
+                  class="flex-1 flex items-center justify-between sm:justify-start gap-3 cursor-pointer group bg-slate-900/50 px-4 py-2 rounded-2xl border border-slate-700 hover:border-purple-500/50 transition-colors text-white"
+                >
+                  <div class="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      v-model="filterVolOnly"
+                      class="w-5 h-5 accent-purple-500"
+                    />
+                    <span class="text-xs font-bold whitespace-nowrap">Alleen volle wezenknal</span>
+                  </div>
+                  <div class="border border-white/10 p-1.5 rounded-full bg-slate-800">
+                    <img src="../img/icons/vol.png" class="w-15 h-5 object-contain" />
+                  </div>
+                </label>
+
+                <label
+                  class="flex-1 flex items-center justify-between sm:justify-start gap-3 cursor-pointer group bg-slate-900/50 px-4 py-2 rounded-2xl border border-slate-700 hover:border-purple-500/50 transition-colors text-white"
+                >
+                  <div class="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      v-model="filterTovertasOnly"
+                      class="w-5 h-5 accent-purple-500"
+                    />
+                    <span class="text-xs font-bold whitespace-nowrap">Tovertas reeks 3</span>
+                  </div>
+                  <div class="border border-white/10 p-1.5 rounded-full bg-slate-800">
+                    <img src="../img/icons/icon_powerup_bag.png" class="w-5 object-contain" />
+                  </div>
+                </label>
+              </div>
             </div>
 
             <div class="mb-1">
@@ -495,7 +511,6 @@ onMounted(() => {
           :class="{ 'animate-poof': isClearing }"
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 transition-all"
         >
-        
           <CreatureCard
             v-for="creature in sortedCreatures"
             :key="creature.id"
@@ -597,10 +612,18 @@ onMounted(() => {
                       Omschrijving
                     </h3>
                   </div>
-                  <p class="text-slate-300 leading-relaxed text-sm">
-                    <span v-if="selectedCreature.description && selectedCreature.description !== '#N/A'">{{selectedCreature.description}}</span>
-                    <div v-else class="flex"><img src="../img/icons/icon_exclamation.png"><span class="italic ml-4">Deze magische verschijning heeft nog geen omschrijving in de archieven.</span></div>
-                  </p>
+                  <div class="text-slate-300 leading-relaxed text-sm">
+                    <span
+                      v-if="selectedCreature.description && selectedCreature.description !== '#N/A'"
+                      >{{ selectedCreature.description }}</span
+                    >
+                    <div v-else class="flex">
+                      <img src="../img/icons/icon_exclamation.png" /><span class="italic ml-4"
+                        >Deze magische verschijning heeft nog geen omschrijving in de
+                        archieven.</span
+                      >
+                    </div>
+                  </div>
                 </div>
               </div>
 
