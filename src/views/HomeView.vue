@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import pb from '@/lib/pocketbase'
 import CreatureCard from '@/components/CreatureCard.vue'
 
@@ -16,6 +16,17 @@ const selectedR3Icon = ref(null)
 const showFilters = ref(false)
 
 const filterTovertasOnly = ref(true)
+
+// Zoekfilter op naam
+const searchName = ref('')
+
+// LocalStorage keys
+const LS_KEYS = {
+  vol: 'mw_filter_vol',
+  tovertas: 'mw_filter_tovertas',
+  sort: 'mw_sortBy',
+  showFilters: 'mw_showFilters',
+}
 
 // Achtergrondafbeeldingen
 import bg1 from '@/img/background1.png'
@@ -216,8 +227,12 @@ const filteredCreatures = computed(() => {
 
       const tovertasMatch = filterTovertasOnly.value ? hasTovertas : true
 
+      // Zoekfilter op naam (case-insensitive)
+      const nameMatch =
+        !searchName.value || (c.name || '').toLowerCase().includes(searchName.value.toLowerCase())
+
       // Alles moet matchen
-      return catMatch && volMatch && knalMatch && r3Match && tovertasMatch
+      return catMatch && volMatch && knalMatch && r3Match && tovertasMatch && nameMatch
     })
     .sort((a, b) => (a.points || 0) - (b.points || 0))
 })
@@ -249,8 +264,15 @@ const clearAllFilters = () => {
   selectedR3Icon.value = null
   filterVolOnly.value = false
   filterTovertasOnly.value = false
-  // Optioneel: sluit ook het menu op mobiel na het wissen
-  showFilters.value = false
+  // Optioneel: sluit ook het menu op mobiel na het wissen; houd open op brede schermen
+  if (typeof window !== 'undefined' && window.innerWidth <= 650) {
+    showFilters.value = false
+  }
+
+  // Reset zoekfilter op naam
+  if (typeof searchName !== 'undefined') {
+    searchName.value = ''
+  }
 
   // Na .. ms animatie uitzetten
   setTimeout(() => {
@@ -264,7 +286,8 @@ const hasActiveFilters = computed(() => {
     selectedKnalIcon.value ||
     selectedR3Icon.value ||
     filterVolOnly.value ||
-    filterTovertasOnly.value
+    filterTovertasOnly.value ||
+    (searchName && searchName.value)
   )
 })
 
@@ -308,7 +331,56 @@ const sortedCreatures = computed(() => {
 onMounted(() => {
   setRandomBackground()
   fetchData()
+  // Lees opgeslagen instellingen uit localStorage (indien beschikbaar)
+  if (typeof window !== 'undefined') {
+    try {
+      const storedVol = localStorage.getItem(LS_KEYS.vol)
+      const storedTovertas = localStorage.getItem(LS_KEYS.tovertas)
+      const storedSort = localStorage.getItem(LS_KEYS.sort)
+      const storedShow = localStorage.getItem(LS_KEYS.showFilters)
+
+      if (storedVol !== null) filterVolOnly.value = storedVol === '1'
+      if (storedTovertas !== null) filterTovertasOnly.value = storedTovertas === '1'
+      if (storedSort) sortBy.value = storedSort
+
+      // showFilters: als we iets opgeslagen hebben, gebruik dat; anders default op brede schermen
+      if (storedShow !== null) {
+        showFilters.value = storedShow === '1'
+      } else if (window.innerWidth > 650) {
+        showFilters.value = true
+      }
+    } catch (e) {
+      console.warn('Kon lokale instellingen niet lezen:', e)
+    }
+  }
 })
+
+// Watchers om wijzigingen naar localStorage te schrijven
+if (typeof window !== 'undefined') {
+  watch(filterVolOnly, (val) => {
+    try {
+      localStorage.setItem(LS_KEYS.vol, val ? '1' : '0')
+    } catch (e) {}
+  })
+
+  watch(filterTovertasOnly, (val) => {
+    try {
+      localStorage.setItem(LS_KEYS.tovertas, val ? '1' : '0')
+    } catch (e) {}
+  })
+
+  watch(sortBy, (val) => {
+    try {
+      localStorage.setItem(LS_KEYS.sort, val || '')
+    } catch (e) {}
+  })
+
+  watch(showFilters, (val) => {
+    try {
+      localStorage.setItem(LS_KEYS.showFilters, val ? '1' : '0')
+    } catch (e) {}
+  })
+}
 </script>
 
 <template>
@@ -380,65 +452,83 @@ onMounted(() => {
             <p
               class="text-[20px] uppercase font-bold text-slate-400 mb-4 mt-0 tracking-widest text-center"
             >
-              - Filters -
+              - Filters en sortering-
             </p>
 
             <div
               class="mb-6 flex flex-col lg:flex-row items-center lg:items-end justify-center gap-6"
             >
-              <div class="flex flex-col gap-2 w-full sm:w-auto items-center sm:items-start">
-                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">
-                  Sorteer op
-                </label>
-                <div
-                  class="inline-flex p-1.5 bg-slate-900/50 backdrop-blur-md rounded-xl border border-slate-700 w-full sm:w-fit"
-                >
-                  <button
-                    @click="sortBy = 'points'"
-                    :class="
-                      sortBy === 'points'
-                        ? 'bg-purple-600 text-white shadow-lg'
-                        : 'text-slate-400 hover:text-slate-200'
-                    "
-                    class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 flex items-center justify-center gap-2"
+              <div>
+                <div class="flex flex-col gap-2 w-full sm:w-auto items-center sm:items-start">
+                  <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">
+                    Sorteer op
+                  </label>
+                  <div
+                    class="inline-flex p-1.5 bg-slate-900/50 backdrop-blur-md rounded-xl border border-slate-700 w-full sm:w-fit"
                   >
-                    <img
-                      src="../img/icons/icon_creature_meter.png"
-                      class="w-5 h-5 object-contain"
-                    />
-                    <span class="whitespace-nowrap">Punten</span>
-                  </button>
-
-                  <button
-                    @click="sortBy = 'name'"
-                    :class="
-                      sortBy === 'name'
-                        ? 'bg-purple-600 text-white shadow-lg'
-                        : 'text-slate-400 hover:text-slate-200'
-                    "
-                    class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    <span class="whitespace-nowrap">Naam</span>
-                    <img src="../img/icons/abc-block.png" class="w-5 h-5 object-contain" />
-                  </button>
+                    <button
+                      @click="sortBy = 'points'"
+                      :class="
+                        sortBy === 'points'
+                          ? 'bg-purple-600 text-white shadow-lg'
+                          : 'text-slate-400 hover:text-slate-200'
+                      "
+                      class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 flex items-center justify-center gap-2"
+                    >
+                      <img
+                        src="../img/icons/icon_creature_meter.png"
+                        class="w-5 h-5 object-contain"
+                      />
+                      <span class="whitespace-nowrap">Punten</span>
+                    </button>
+                    <button
+                      @click="sortBy = 'name'"
+                      :class="
+                        sortBy === 'name'
+                          ? 'bg-purple-600 text-white shadow-lg'
+                          : 'text-slate-400 hover:text-slate-200'
+                      "
+                      class="flex-1 sm:flex-none px-3 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 flex items-center justify-center gap-2"
+                    >
+                      <span class="whitespace-nowrap">Naam</span>
+                      <img src="../img/icons/abc-block.png" class="w-5 h-5 object-contain" />
+                    </button>
+                  </div>
+                  <div class="mt-0 w-full sm:w-auto">
+                    <label
+                      class="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1"
+                    >
+                      
+                    </label>
+                    <div class="flex flex-row">
+                      <input
+                        v-model="searchName"
+                        type="text"
+                        placeholder="Zoek op naam..."
+                        class="mt-1 w-full sm:w-60 px-3 py-2 rounded-lg bg-slate-900/50 border border-slate-700 text-white focus:border-purple-500"
+                      />
+                      <div class="w-5 pt-3"><img v-if="searchName != ''" src="../img/icons/clear.png" class="w-5 h-5 object-contain cursor-pointer self-center pl-2" @click="searchName = ''" title="Maak zoekveld leeg" /></div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <div class="flex flex-row sm:flex-col gap-4 w-full sm:w-auto">
                 <label
                   class="flex-1 flex items-center justify-between sm:justify-start gap-3 cursor-pointer group bg-slate-900/50 px-4 py-2 rounded-2xl border border-slate-700 hover:border-purple-500/50 transition-colors text-white"
                 >
-                  <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-3 ">
                     <input
                       type="checkbox"
                       v-model="filterVolOnly"
                       class="w-5 h-5 accent-purple-500"
                     />
                     <span class="text-xs font-bold whitespace-nowrap">Alleen volle wezenknal</span>
-                  </div>
-                  <div class="border border-white/10 p-1.5 rounded-full bg-slate-800">
+                    <div class="border border-white/10 p-1.5 rounded-full bg-slate-800">
                     <img src="../img/icons/vol.png" class="w-15 h-5 object-contain" />
                   </div>
+                  </div>
+                  
                 </label>
 
                 <label
@@ -450,11 +540,12 @@ onMounted(() => {
                       v-model="filterTovertasOnly"
                       class="w-5 h-5 accent-purple-500"
                     />
-                    <span class="text-xs font-bold whitespace-nowrap">Tovertas reeks 3</span>
-                  </div>
-                  <div class="border border-white/10 p-1.5 rounded-full bg-slate-800">
+                    <span class="text-xs font-bold whitespace-nowrap">Tovertas in reeks 3</span>
+                    <div class="border border-white/10 p-1.5 rounded-full bg-slate-800">
                     <img src="../img/icons/icon_powerup_bag.png" class="w-5 object-contain" />
                   </div>
+                  </div>
+                  
                 </label>
               </div>
             </div>
@@ -465,7 +556,7 @@ onMounted(() => {
               >
                 - Filter op Categorie -
               </p>
-              <div class="flex flex-wrap justify-center gap-3">
+              <div class="flex flex-wrap justify-center gap-1">
                 <button
                   v-for="category in categories"
                   :key="category.id"
@@ -559,9 +650,12 @@ onMounted(() => {
           </button>
 
           <div
-            class="relative h-64 sm:h-80 rounded-t-3xl overflow-hidden flex items-center justify-center bg-cover bg-center"
+            class="relative h-64 sm:h-80 rounded-t-3xl overflow-hidden flex items-center justify-center bg-cover bg-center fireflies"
             :style="{ backgroundImage: `url(${modalBgTexture})` }"
           >
+            <div class="">
+              <fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly>
+            </div>
             <div class="absolute inset-0 bg-slate-950/50"></div>
 
             <div
@@ -578,7 +672,7 @@ onMounted(() => {
             ></div>
             <img
               v-if="selectedCreature"
-              :src="`https://mjeppo.ddns.net/api/files/creatures/${selectedCreature.id}/${selectedCreature.img_icon || selectedCreature.img_full}`"
+              :src="`https://mjeppo.ddns.net/api/files/creatures/${selectedCreature.id}/${selectedCreature.img_full || selectedCreature.image_icon}`"
               class="relative z-10 max-w-full max-h-full object-contain p-6 animate-magical-float"
               :alt="selectedCreature.name"
               @error="
@@ -591,6 +685,59 @@ onMounted(() => {
                 }
               "
             />
+            <!-- Linker paneel: Uitgelichte wezens / categorieën -->
+            <div
+              v-if="selectedCreature && (selectedCreature.expand?.categories_relatie || []).length"
+              class="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 flex flex-col items-start max-w-xs border border-white/30 p-4 bg-black/30 rounded-md"
+            >
+              <div
+                class="text-[14px] uppercase text-white font-bold mb-2 tracking-wider border-white/30 pb-1 border-transparant-gradient"
+              >
+                UITGELICHTE WEZENS
+              </div>
+              <div class="w-full"></div>
+              <div class="flex flex-col gap-2">
+                <span
+                  v-for="cat in selectedCreature.expand?.categories_relatie || []"
+                  :key="cat.id"
+                  class="bg-black/40 text-white px-3 py-1 rounded-md uppercase text-[10px] font-bold"
+                >
+                  {{ cat.name }}
+                </span>
+              </div>
+            </div>
+            <!-- Wezenknal en punten, rechts van de hoofdafbeelding -->
+            <div
+              v-if="selectedCreature"
+              class="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 flex flex-col items-center"
+            >
+              <div
+                class="knal-frame relative bg-purple-800/40! border border-slate-700 rounded-sm p-0 w-38 h-38 flex items-center justify-center"
+              >
+                <img
+                  v-if="selectedCreature.expand?.wezenknal_relatie"
+                  :src="getRelationIconUrl(selectedCreature.expand.wezenknal_relatie)"
+                  class="w-35 h-35 object-contain rounded-sm"
+                  alt="Wezenknal"
+                />
+                <img
+                  v-else-if="selectedCreature.img_type_knal"
+                  :src="getIconUrl(selectedCreature.img_type_knal)"
+                  class="w-30 h-30 object-contain"
+                  alt="Wezenknal"
+                />
+
+                <!-- punten inlay onderaan de afbeelding -->
+                <div
+                  class="knal-inlay absolute left-1/2 transform -translate-x-1/2 -bottom-3 bg-black/40 border border-slate-700 px-0 rounded-md flex items-center"
+                >
+                  <img src="../img/icons/icon_creature_meter.png" class="meter-icon" />
+                  <span class="points-text font-black text-sm mr-2">{{
+                    selectedCreature.points || 0
+                  }}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="p-8">
@@ -599,6 +746,7 @@ onMounted(() => {
                 <div>
                   <h2 class="text-4xl font-black text-white mb-1">{{ selectedCreature.name }}</h2>
                   <p class="text-purple-400 font-bold text-lg uppercase tracking-wider">
+                    <img v-if="selectedCreature.species === 'Episch'" src="../img/icons/icon_pet_legendary.png" class="inline w-5 h-5 mr-1" />
                     {{ selectedCreature.species }}
                   </p>
                 </div>
@@ -725,6 +873,8 @@ onMounted(() => {
         </div>
       </div>
     </transition>
+    
+    
   </main>
 </template>
 
@@ -798,4 +948,340 @@ onMounted(() => {
   transform: scale(1.1) translateY(-5px);
   filter: brightness(1.1) drop-shadow(0 15px 25px rgba(139, 92, 246, 0.4));
 }
+
+/* Wezenknal kader en punten inlay */
+.knal-frame {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.15));
+}
+
+/* Inlay (punten) met meter-icoon dat links uitsteken */
+.knal-inlay {
+  height: 40px;
+  min-width: 82px;
+  padding-left: 8px;
+  padding-right: 12px;
+  display: flex;
+  align-items: center;
+  /* gap: 10px; */
+  /* border-radius: 20px; */
+  /* backdrop-filter: blur(6px); */
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  color: #fff;
+  overflow: visible;
+}
+
+.meter-icon {
+  height: 125%;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  transform: translateX(-6px);
+  animation: meter-slide-in 1460ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  margin-left: -25px;
+  margin-top: 2px;
+}
+
+.points-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 100;
+  color: #ffffff; /* wit zoals gevraagd */
+  padding-left: 0px;
+  font-size: 1.7rem;
+  margin-right: 10px;
+}
+
+.border-transparant-gradient {
+  position: relative;
+  padding-bottom: 10px; /* ruimte voor de border */
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 1), transparent) bottom /
+    100% 2px no-repeat;
+}
+
+@keyframes meter-slide-in {
+  from {
+    transform: translateX(-32px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.fireflies {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.fireflies fire-fly {
+  position: absolute;
+  bottom: -10px;
+  background: #f2e6c9; /* beige */
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: floatUp linear infinite;
+}
+
+/* Animatie */
+@keyframes floatUp {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% { opacity: 0.8; }
+  50% {
+    transform: translate(-20px, -175px);
+  }
+  100% {
+    transform: translate(20px, -350px);
+    opacity: 0;
+  }
+}
+
+
+/* Variatie per stipje */
+.fireflies fire-fly:nth-child(1) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(2) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(3) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(4) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(5) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(6) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(7) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(8) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(9) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(10) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(11) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(12) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(13) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(14) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(15) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(16) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(17) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(18) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(19) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(20) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(21) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(22) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(23) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(24) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(25) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(26) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(27) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(28) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(29) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(30) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+
+.fireflies fire-fly {
+  box-shadow: 0 0 6px rgba(242,230,201,0.8);
+}
+
+@keyframes sway {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+}
+
+.fireflies fire-fly {
+  animation:
+    floatUp linear infinite
+}
+
+
+
 </style>

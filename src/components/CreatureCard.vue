@@ -31,11 +31,11 @@ const getCreatureFileUrl = (fileName) => {
 <template>
   <div class="w-full bg-slate-800 rounded-2xl shadow-black shadow-xl border border-slate-700 overflow-hidden flex flex-col hover:border-blue-500 transition-colors duration-300">
     
-    <div class="relative h-24 bg-linear-to-b from-slate-700 to-slate-900 p-2 flex items-center justify-center group bg-cover bg-center"
+    <div class="relative h-24 bg-linear-to-b from-slate-700 to-slate-900 p-2 flex items-center justify-center group bg-cover bg-center "
     :style="{ backgroundImage: `url(${modalBgTexture1})` }">
       <img 
-        v-if="creature.img_full"
-        :src="getCreatureFileUrl(creature.img_full)" 
+        v-if="creature.img_icon"
+        :src="getCreatureFileUrl(creature.img_icon)" 
         class="max-h-full object-contain drop-shadow-2xl transition-all duration-500 ease-out group-hover:scale-110 group-hover:-translate-y-2 group-hover:drop-shadow-[0_20px_30px_rgba(139,92,246,0.5)]"
         alt="Creature Icon"
       />

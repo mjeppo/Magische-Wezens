@@ -1,2 +1,322 @@
 @import './base.css';
 
+.bebas-neue-regular {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.barlow-condensed-medium {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.fireflies {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.fireflies fire-fly {
+  position: absolute;
+  bottom: -10px;
+  background: #f2e6c9; /* beige */
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: floatUp linear infinite;
+}
+
+/* Animatie */
+@keyframes floatUp {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-20px, -175px);
+  }
+  100% {
+    transform: translate(20px, -350px);
+    opacity: 0;
+  }
+}
+
+/* Variatie per stipje */
+.fireflies fire-fly:nth-child(1) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(2) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(3) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(4) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(5) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(6) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(7) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(8) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(9) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(10) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(11) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(12) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(13) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(14) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(15) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(16) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(17) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(18) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(19) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(20) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(21) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(22) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(23) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(24) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(25) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly:nth-child(26) {
+  left: 10%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 12s;
+}
+
+.fireflies fire-fly:nth-child(27) {
+  left: 25%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 9s;
+  animation-delay: 2s;
+}
+
+.fireflies fire-fly:nth-child(28) {
+  left: 40%;
+  width: 4px;
+  height: 4px;
+  animation-duration: 14s;
+}
+
+.fireflies fire-fly:nth-child(29) {
+  left: 60%;
+  width: 2px;
+  height: 2px;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+
+.fireflies fire-fly:nth-child(30) {
+  left: 80%;
+  width: 3px;
+  height: 3px;
+  animation-duration: 11s;
+}
+
+.fireflies fire-fly {
+  box-shadow: 0 0 6px rgba(242, 230, 201, 0.8);
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-20px);
+  }
+}
+
+.fireflies fire-fly {
+  animation: floatUp linear infinite;
+}
+
+/* Enhanced fireflies: make them larger, brighter and a bit faster */
+.fireflies fire-fly {
+  background: #fff6b8; /* brighter yellow */
+  opacity: 1;
+  box-shadow:
+    0 0 14px rgba(255, 240, 140, 0.95),
+    0 0 28px rgba(255, 220, 80, 0.7);
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50%;
+  animation-duration: 8s !important; /* faster overall */
+}
+
+/* Add subtle glow element */
+.fireflies fire-fly::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 245, 180, 0.9) 0%,
+    rgba(255, 230, 120, 0.25) 40%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  filter: blur(4px);
+  pointer-events: none;
+}
