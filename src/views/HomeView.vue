@@ -1010,6 +1010,8 @@ if (typeof window !== 'undefined') {
   }
 }
 
+/* #region Fireflies */
+
 .fireflies {
   position: relative;
   width: 100%;
@@ -1282,6 +1284,6 @@ if (typeof window !== 'undefined') {
     floatUp linear infinite
 }
 
-
+/* #endregion */
 
 </style>
