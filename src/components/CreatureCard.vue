@@ -2,7 +2,7 @@
 const props = defineProps(['creature'])
 const emit = defineEmits(['filterKnal', 'filterR3'])
 
-const baseUrl = 'https://mjeppo.duckdns.org'
+const baseUrl = 'https://mjeppo.ddns.net'
 
 import modalBgTexture1 from '../img/tex_bkg_magicalcreatures_main_01.png'
 import modalBgTexture2 from '../img/ForestOfDean_Bg.png'
