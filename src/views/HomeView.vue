@@ -182,7 +182,7 @@ const getRelationIconUrl = (relation) => {
   // We proberen eerst de dynamische ID, anders de collectienaam 'icons'
   const collectionKey = relation.collectionId || relation.collectionName || 'icons'
 
-  return `https://mjeppo.ddns.net/api/files/${collectionKey}/${relation.id}/${fileName}`
+  return `https://mjeppo.duckdns.net/api/files/${collectionKey}/${relation.id}/${fileName}`
 }
 
 // Haal de unieke Wezenknal icoontjes op
@@ -248,7 +248,7 @@ const getIconUrl = (fileName) => {
       c.img_r3b === fileName ||
       c.img_r3c === fileName,
   )
-  return owner ? `https://mjeppo.ddns.net/api/files/creatures/${owner.id}/${fileName}` : ''
+  return owner ? `https://mjeppo.duckdns.net/api/files/creatures/${owner.id}/${fileName}` : ''
 }
 
 const selectCategory = (id) => {
@@ -313,7 +313,7 @@ const closeModal = () => {
 const getSelectedCreatureUrl = (fileName) => {
   if (!fileName || !selectedCreature.value) return ''
   // Gebruik de baseUrl die je waarschijnlijk al ergens gedefinieerd hebt
-  return `https://mjeppo.ddns.net/api/files/creatures/${selectedCreature.value.id}/${fileName}`
+  return `https://mjeppo.duckdns.net/api/files/creatures/${selectedCreature.value.id}/${fileName}`
 }
 
 const sortedCreatures = computed(() => {
@@ -672,7 +672,7 @@ if (typeof window !== 'undefined') {
             ></div>
             <img
               v-if="selectedCreature"
-              :src="`https://mjeppo.ddns.net/api/files/creatures/${selectedCreature.id}/${selectedCreature.img_full || selectedCreature.image_icon}`"
+              :src="`https://mjeppo.duckdns.net/api/files/creatures/${selectedCreature.id}/${selectedCreature.img_full || selectedCreature.image_icon}`"
               class="relative z-10 max-w-full max-h-full object-contain p-6 animate-magical-float"
               :alt="selectedCreature.name"
               @error="
@@ -680,7 +680,7 @@ if (typeof window !== 'undefined') {
                   console.log('❌ URL mislukt:', e.target.src)
                   // Laatste redding: probeer image_icon (met underscore) als img_icon faalt
                   if (!e.target.src.includes('image_icon')) {
-                    e.target.src = `https://mjeppo.ddns.net/api/files/creatures/${selectedCreature.id}/${selectedCreature.image_icon}`
+                    e.target.src = `https://mjeppo.duckdns.net/api/files/creatures/${selectedCreature.id}/${selectedCreature.image_icon}`
                   }
                 }
               "

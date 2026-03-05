@@ -1,6 +1,6 @@
-import PocketBase from 'pocketbase';
+import PocketBase from 'pocketbase'
 
 // Gebruik jouw exacte domein
-const pb = new PocketBase('https://mjeppo.ddns.net');
+const pb = new PocketBase('https://mjeppo.duckdns.net')
 
-export default pb;
+export default pb
