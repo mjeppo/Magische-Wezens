@@ -182,7 +182,7 @@ const getRelationIconUrl = (relation) => {
   // We proberen eerst de dynamische ID, anders de collectienaam 'icons'
   const collectionKey = relation.collectionId || relation.collectionName || 'icons'
 
-  return `https://mjeppo.duckdns.net/api/files/${collectionKey}/${relation.id}/${fileName}`
+  return `https://mjeppo.duckdns.org/api/files/${collectionKey}/${relation.id}/${fileName}`
 }
 
 // Haal de unieke Wezenknal icoontjes op
@@ -248,7 +248,7 @@ const getIconUrl = (fileName) => {
       c.img_r3b === fileName ||
       c.img_r3c === fileName,
   )
-  return owner ? `https://mjeppo.duckdns.net/api/files/creatures/${owner.id}/${fileName}` : ''
+  return owner ? `https://mjeppo.duckdns.org/api/files/creatures/${owner.id}/${fileName}` : ''
 }
 
 const selectCategory = (id) => {
@@ -313,7 +313,7 @@ const closeModal = () => {
 const getSelectedCreatureUrl = (fileName) => {
   if (!fileName || !selectedCreature.value) return ''
   // Gebruik de baseUrl die je waarschijnlijk al ergens gedefinieerd hebt
-  return `https://mjeppo.duckdns.net/api/files/creatures/${selectedCreature.value.id}/${fileName}`
+  return `https://mjeppo.duckdns.org/api/files/creatures/${selectedCreature.value.id}/${fileName}`
 }
 
 const sortedCreatures = computed(() => {
@@ -460,7 +460,9 @@ if (typeof window !== 'undefined') {
             >
               <div>
                 <div class="flex flex-col gap-2 w-full sm:w-auto items-center sm:items-start">
-                  <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">
+                  <label
+                    class="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1"
+                  >
                     Sorteer op
                   </label>
                   <div
@@ -498,7 +500,6 @@ if (typeof window !== 'undefined') {
                     <label
                       class="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1"
                     >
-                      
                     </label>
                     <div class="flex flex-row">
                       <input
@@ -507,7 +508,15 @@ if (typeof window !== 'undefined') {
                         placeholder="Zoek op naam..."
                         class="mt-1 w-full sm:w-60 px-3 py-2 rounded-lg bg-slate-900/50 border border-slate-700 text-white focus:border-purple-500"
                       />
-                      <div class="w-5 pt-3"><img v-if="searchName != ''" src="../img/icons/clear.png" class="w-5 h-5 object-contain cursor-pointer self-center pl-2" @click="searchName = ''" title="Maak zoekveld leeg" /></div>
+                      <div class="w-5 pt-3">
+                        <img
+                          v-if="searchName != ''"
+                          src="../img/icons/clear.png"
+                          class="w-5 h-5 object-contain cursor-pointer self-center pl-2"
+                          @click="searchName = ''"
+                          title="Maak zoekveld leeg"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -517,7 +526,7 @@ if (typeof window !== 'undefined') {
                 <label
                   class="flex-1 flex items-center justify-between sm:justify-start gap-3 cursor-pointer group bg-slate-900/50 px-4 py-2 rounded-2xl border border-slate-700 hover:border-purple-500/50 transition-colors text-white"
                 >
-                  <div class="flex items-center gap-3 ">
+                  <div class="flex items-center gap-3">
                     <input
                       type="checkbox"
                       v-model="filterVolOnly"
@@ -525,10 +534,9 @@ if (typeof window !== 'undefined') {
                     />
                     <span class="text-xs font-bold whitespace-nowrap">Alleen volle wezenknal</span>
                     <div class="border border-white/10 p-1.5 rounded-full bg-slate-800">
-                    <img src="../img/icons/vol.png" class="w-15 h-5 object-contain" />
+                      <img src="../img/icons/vol.png" class="w-15 h-5 object-contain" />
+                    </div>
                   </div>
-                  </div>
-                  
                 </label>
 
                 <label
@@ -542,10 +550,9 @@ if (typeof window !== 'undefined') {
                     />
                     <span class="text-xs font-bold whitespace-nowrap">Tovertas in reeks 3</span>
                     <div class="border border-white/10 p-1.5 rounded-full bg-slate-800">
-                    <img src="../img/icons/icon_powerup_bag.png" class="w-5 object-contain" />
+                      <img src="../img/icons/icon_powerup_bag.png" class="w-5 object-contain" />
+                    </div>
                   </div>
-                  </div>
-                  
                 </label>
               </div>
             </div>
@@ -654,7 +661,13 @@ if (typeof window !== 'undefined') {
             :style="{ backgroundImage: `url(${modalBgTexture})` }"
           >
             <div class="">
-              <fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly>
+              <fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly
+              ><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly
+              ><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly
+              ><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly
+              ><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly
+              ><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly
+              ><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly><fire-fly></fire-fly>
             </div>
             <div class="absolute inset-0 bg-slate-950/50"></div>
 
@@ -672,7 +685,7 @@ if (typeof window !== 'undefined') {
             ></div>
             <img
               v-if="selectedCreature"
-              :src="`https://mjeppo.duckdns.net/api/files/creatures/${selectedCreature.id}/${selectedCreature.img_full || selectedCreature.image_icon}`"
+              :src="`https://mjeppo.duckdns.org/api/files/creatures/${selectedCreature.id}/${selectedCreature.img_full || selectedCreature.image_icon}`"
               class="relative z-10 max-w-full max-h-full object-contain p-6 animate-magical-float"
               :alt="selectedCreature.name"
               @error="
@@ -680,7 +693,7 @@ if (typeof window !== 'undefined') {
                   console.log('❌ URL mislukt:', e.target.src)
                   // Laatste redding: probeer image_icon (met underscore) als img_icon faalt
                   if (!e.target.src.includes('image_icon')) {
-                    e.target.src = `https://mjeppo.duckdns.net/api/files/creatures/${selectedCreature.id}/${selectedCreature.image_icon}`
+                    e.target.src = `https://mjeppo.duckdns.org/api/files/creatures/${selectedCreature.id}/${selectedCreature.image_icon}`
                   }
                 }
               "
@@ -746,7 +759,11 @@ if (typeof window !== 'undefined') {
                 <div>
                   <h2 class="text-4xl font-black text-white mb-1">{{ selectedCreature.name }}</h2>
                   <p class="text-purple-400 font-bold text-lg uppercase tracking-wider">
-                    <img v-if="selectedCreature.species === 'Episch'" src="../img/icons/icon_pet_legendary.png" class="inline w-5 h-5 mr-1" />
+                    <img
+                      v-if="selectedCreature.species === 'Episch'"
+                      src="../img/icons/icon_pet_legendary.png"
+                      class="inline w-5 h-5 mr-1"
+                    />
                     {{ selectedCreature.species }}
                   </p>
                 </div>
@@ -873,8 +890,6 @@ if (typeof window !== 'undefined') {
         </div>
       </div>
     </transition>
-    
-    
   </main>
 </template>
 
@@ -1035,7 +1050,9 @@ if (typeof window !== 'undefined') {
     transform: translate(0, 0);
     opacity: 0;
   }
-  10% { opacity: 0.8; }
+  10% {
+    opacity: 0.8;
+  }
   50% {
     transform: translate(-20px, -175px);
   }
@@ -1044,7 +1061,6 @@ if (typeof window !== 'undefined') {
     opacity: 0;
   }
 }
-
 
 /* Variatie per stipje */
 .fireflies fire-fly:nth-child(1) {
@@ -1269,21 +1285,23 @@ if (typeof window !== 'undefined') {
   animation-duration: 11s;
 }
 
-
 .fireflies fire-fly {
-  box-shadow: 0 0 6px rgba(242,230,201,0.8);
+  box-shadow: 0 0 6px rgba(242, 230, 201, 0.8);
 }
 
 @keyframes sway {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-20px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-20px);
+  }
 }
 
 .fireflies fire-fly {
-  animation:
-    floatUp linear infinite
+  animation: floatUp linear infinite;
 }
 
 /* #endregion */
-
 </style>
